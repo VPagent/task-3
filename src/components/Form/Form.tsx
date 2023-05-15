@@ -1,9 +1,10 @@
 import { ChangeEvent, FC, useState } from "react";
 import styles from "./Form.module.scss";
 import { fetchData } from "../../services/Api";
+import { Data } from "../../types";
 
 type Props = {
-  onChangeData: (data: any) => void;
+  onChangeData: (data: Data) => void;
   onActiveLoader: (x: boolean) => void;
 };
 
@@ -12,6 +13,11 @@ const Form: FC<Props> = ({ onChangeData, onActiveLoader }) => {
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
+  };
+
+  const onClearData = () => {
+    setValue("");
+    onChangeData(null);
   };
 
   const handleSubmit = async () => {
@@ -30,16 +36,20 @@ const Form: FC<Props> = ({ onChangeData, onActiveLoader }) => {
 
   return (
     <div className={styles.form}>
+      <p>Please enter country</p>
       <input
         className={styles.input}
         onChange={handleChangeInput}
         type="text"
         value={value}
+        placeholder="Country name"
       />
-      <button onClick={handleSubmit} type="button">
-        Отправить
+      <button className={styles.button} onClick={handleSubmit} type="button">
+        Send
       </button>
-      <button type="button">Сброс</button>
+      <button className={styles.button} onClick={onClearData} type="button">
+        Clear
+      </button>
     </div>
   );
 };

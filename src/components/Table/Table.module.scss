@@ -1,0 +1,98 @@
+@import "../../sass/mixins.scss";
+
+.component {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+
+  border-radius: 20px;
+  box-shadow: var(--boxShadow);
+}
+
+.tableHeader {
+  display: flex;
+  flex-direction: row;
+}
+
+:global {
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid grey;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    transition: transform var(--transition-duration) ease-in-out;
+  }
+  .column {
+    @include FlexCenter;
+    padding: 5px;
+    word-wrap: break-word;
+  }
+  .first {
+    width: 5%;
+    font-weight: 500;
+  }
+
+  .second {
+    width: 25%;
+    justify-content: flex-start;
+  }
+
+  .third {
+    width: 15%;
+  }
+
+  .fourth {
+    width: 10%;
+  }
+
+  .fifth {
+    width: 25%;
+  }
+
+  .sixth {
+    width: 15%;
+    flex-direction: column;
+  }
+
+  .seventh {
+    width: 5%;
+  }
+}
+
+.errorBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 300px;
+
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+
+  border-radius: 20px;
+
+  background-color: rgba(128, 128, 128, 0.463);
+  box-shadow: var(--boxShadow);
+}

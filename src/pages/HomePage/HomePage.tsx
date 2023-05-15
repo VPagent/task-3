@@ -2,56 +2,63 @@ import { FC, useEffect, useState } from "react";
 import styles from "./HomePage.module.scss";
 import Container from "../../components/Container/Container";
 import Form from "../../components/Form/Form";
-import TableItem from "../../components/TableItem/TableItem";
-import Loader from "../../components/Loader/Loader";
+import { storage } from "../../helpers/storage";
+import FavoritesBox from "../../components/FavoritesBox/FavoritesBox";
+import Table from "../../components/Table/Table";
+import { Data, Item } from "../../types";
+
+const STORAGE_DATA_KEY = "data";
+const STORAGE_FAVORITE_KEY = "favorites";
 
 const HomePage: FC = () => {
-  const [data, setData] = useState<any[] | null>(null);
+  const { set, get } = storage;
+  const [data, setData] = useState<Data>(get(STORAGE_DATA_KEY) || null);
+  const [favoriteItems, setFavoriteItems] = useState<string[] | []>(
+    get(STORAGE_FAVORITE_KEY) || []
+  );
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChangeData = (data: any) => {
+  const handleChangeData = (data: Data) => {
     setData(data);
   };
 
-  if (isLoading) {
-    return <Loader className={styles.loader} />;
-  }
+  const handleChangeFavorites = (name: Item["name"]) => {
+    //@ts-ignore
+    if (favoriteItems.includes(name)) {
+      const filteredFavorites = favoriteItems.filter((item) => item !== name);
+
+      setFavoriteItems(filteredFavorites);
+    } else {
+      setFavoriteItems([...favoriteItems, name]);
+    }
+  };
+
+  const handleClearFavorites = () => {
+    setFavoriteItems([]);
+  };
+
+  useEffect(() => {
+    set(STORAGE_DATA_KEY, data);
+    set(STORAGE_FAVORITE_KEY, favoriteItems);
+  }, [data, favoriteItems]);
 
   return (
     <section className={styles.section}>
-      <Container>
+      <Container className={styles.container}>
         <Form onChangeData={handleChangeData} onActiveLoader={setIsLoading} />
-
-        {data && (
-          <table>
-            <tr>
-              <td>
-                <th>#</th>
-              </td>
-              <td>
-                <th>Name</th>
-              </td>
-              <td>
-                <th>Country</th>
-              </td>
-              <td>
-                <th>Alpha_two_code</th>
-              </td>
-              <td>
-                <th>Domians</th>
-              </td>
-              <td>
-                <th>Web pages</th>
-              </td>
-              <td>
-                <th></th>
-              </td>
-            </tr>
-            {data?.map((item, index) => (
-              <TableItem item={item} index={index} />
-            ))}
-          </table>
+        {!!favoriteItems?.length && (
+          <FavoritesBox
+            favoriteItems={favoriteItems}
+            onClearFavorites={handleClearFavorites}
+          />
         )}
+
+        <Table
+          data={data}
+          isLoading={isLoading}
+          favoriteItems={favoriteItems}
+          handleChangeFavorites={handleChangeFavorites}
+        />
       </Container>
     </section>
   );
